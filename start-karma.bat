@@ -1,0 +1,1 @@
+call karma start karma.conf.js

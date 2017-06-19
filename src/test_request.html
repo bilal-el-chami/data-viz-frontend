@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Quandl</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+table, tr, td, th {
+	border: 1px solid;
+}
+
+.inline-label {
+	display: inline-block;
+}
+
+.block-label {
+	display: block;
+	padding: 5px 0px 5px 0px;
+	font-weight: bold;
+}
+
+input, textarea, select {
+	padding: 3px 10px;
+	height: 39px;
+	min-width: 225px;
+}
+
+select {
+	height: 39px;
+	min-width: 225px;
+}
+
+.spin-rotation {
+	animation-name: spin;
+	animation-duration: 4000ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+.loader {
+	border: 6px solid #f3f3f3;
+	-webkit-animation: spin 1s linear infinite;
+	animation: spin 1s linear infinite;
+	border-top: 6px solid #555;
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+	margin-left: 20%;
+	display: inline-block;
+}
+
+@keyframes spin {
+	from {transform: rotate(0deg);}
+	to {transform: rotate(360deg);}
+}
+</style>
+</head>
+<body>
+	<div ng-app="quandlTimeSeriesApp" ng-controller="quandlCtrl"
+		class="w3-container">
+		<div class="row">
+			<div class="col-md-12">
+				<div
+					style="background-color: rgba(128, 128, 128, 0.5); width: 100%; height: 100%; margin: 0; top: 0; left: 0; position: absolute; z-index: 1;"
+					ng-show="loading">
+					<div
+						style="position: absolute; top: 45%; left: 45%; font-size: xx-large;">
+						<div class="loader"></div>
+						<span>Loading...</span>
+					</div>
+				</div>
+				<div class="w3-col">
+					<h1 class="w3-center">Quandl Time Series API</h1>
+					<hr />
+					<form class="w3-container">
+						<div class="w3-col m1 l1">&nbsp;</div>
+						<div class="w3-col m2 l2">
+							<label class="block-label"> Database Code: </label> <input
+								type="text" name="databaseCode" ng-model="databaseCode" /> <label
+								class="block-label"> Dataset Code: </label> <input type="text"
+								name="datasetCode" ng-model="datasetCode" />
+						</div>
+						<div class="w3-col m2 l2">
+							<label class="block-label"> Start Date: </label> <input
+								type="date" name="startDate" ng-model="startDate" /> <label
+								class="block-label"> End Date: </label> <input type="date"
+								name="endDate" ng-model="endDate" />
+						</div>
+						<div class="w3-col m2 l2">
+							<label class="block-label"> Limit: </label> <input type="number"
+								name="limit" ng-model="limit" min="0" /> <label
+								class="block-label"> Column Index: </label> <input type="number"
+								name="colIndex" ng-model="colIndex" min="-1" />
+						</div>
+						<div class="w3-col m2 l2">
+							<label class="block-label"> Order: </label> <select
+								ng-model="order" ng-options="x for x in orderOptions"></select>
+							<label class="block-label"> Collapse: </label> <select
+								ng-model="collapse" ng-options="x for x in collapseOptions"></select>
+						</div>
+						<div class="w3-col m2 l2">
+							<label class="block-label"> Transformation: </label> <select
+								ng-model="transformation"
+								ng-options="x for x in transformationOptions"></select> <label
+								class="block-label"> &nbsp; </label>
+							<button ng-click="search()" style="width: 40%;"
+								class="w3-button w3-green w3-hover-green w3-round">Search</button>
+							<button ng-click="clear()" style="width: 40%;"
+								class="w3-button w3-red w3-hover-red w3-round">Clear</button>
+						</div>
+					</form>
+					<hr />
+				</div>
+				<div ng-show="succeded" class="col-md-12">
+					<h3>{{ stockName }}</h3>
+					<p>
+						<b>Newest Available Date:</b> {{ newestAvailableDate }}
+					</p>
+					<p>
+						<b>Oldest Available Date:</b> {{ oldestAvailableDate }}
+					</p>
+					<!-- <p id="request-description"></p> -->
+					<hr />
+				</div>
+				<div style="overflow-x: auto;">
+					<table ng-show="succeded" id="myTable"
+						class="w3-table-all w3-centered w3-striped w3-hoverable">
+						<thead>
+							<tr class="w3-light-grey">
+								<th>Index</th>
+								<th ng-repeat="column in requestResponse.column_names">{{
+									column }}</th>
+							</tr>
+						</thead>
+						<tr ng-repeat="dataElement in requestResponse.data">
+							<td><b>{{ $index+1 }}</b></td>
+							<td ng-repeat="dataCol in dataElement track by $index">{{
+								dataCol | formatData }}</td>
+						</tr>
+						<thead>
+							<tr class="w3-light-grey">
+								<th>Total</th>
+								<th colspan="{{requestResponse.column_names.length}}">{{
+									requestResponse.data.length }}</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div style="width: 100%;" id="chartContainer" ng-show="succeded">
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="./quandl/angular/controller/quandlTimeSeriesController.js"></script>
+</body>
+</html>
