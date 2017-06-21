@@ -61,7 +61,7 @@ describe('quandlCtrl', function() {
 			expect($scope.chartContainer.innerHTML).toEqual("");
 			if($scope.requestResponse!==undefined){
 				if($scope.requestResponse.data!==undefined){
-					expect($scope.requestResponse.data.length).toEqual(0);
+					expect($scope.requestResponse.data.length).toEqual(1);
 				}
 			}
 		});
