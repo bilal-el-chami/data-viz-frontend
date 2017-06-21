@@ -58,7 +58,7 @@ describe('quandlCtrl', function() {
 			$scope.clear();
 			//Testing the result of the function
 			expect($scope.succeded).toEqual(false);
-			expect($scope.chartContainer.innerHTML).toEqual("s");
+			expect($scope.chartContainer.innerHTML).toEqual("");
 			if($scope.requestResponse!==undefined){
 				if($scope.requestResponse.data!==undefined){
 					expect($scope.requestResponse.data.length).toEqual(0);
