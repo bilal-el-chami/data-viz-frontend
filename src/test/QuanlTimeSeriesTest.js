@@ -58,10 +58,10 @@ describe('quandlCtrl', function() {
 			$scope.clear();
 			//Testing the result of the function
 			expect($scope.succeded).toEqual(false);
-			expect($scope.chartContainer.innerHTML).toEqual("");
+			expect($scope.chartContainer.innerHTML).toEqual("s");
 			if($scope.requestResponse!==undefined){
 				if($scope.requestResponse.data!==undefined){
-					expect($scope.requestResponse.data.length).toEqual(1);
+					expect($scope.requestResponse.data.length).toEqual(0);
 				}
 			}
 		});
